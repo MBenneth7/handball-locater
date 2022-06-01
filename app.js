@@ -3,6 +3,9 @@ const app = express();
 const mongoose = require('mongoose');
 const path = require('path');
 
+const Park = require('./models/park');
+
+
 //USING MONGO DB
 main().catch(err => console.log(err, 'OH NO MONGO ERROR!!!'));
 
@@ -20,14 +23,15 @@ app.get('/',(req,res)=>{
     res.render('home');
 });
 
-app.get('/parks',(req,res)=>{
-    res.render('parks/index');
+app.get('/parks',async(req,res)=>{
+    const parks = await Park.find();  
+    res.render('parks/index', {parks});
 });
 
 //LISTENER
 app.listen(3000,()=>{
     console.log('Listening on Route 3000!!!');
-})
+});
 
 
 
