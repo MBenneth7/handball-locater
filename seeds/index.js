@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Park = require('../models/park');
 //SMALLER DATAS SET
-const smallerParks = require ('../seeds/smallerParks');
+const parks = require ('../seeds/smallerParks');
 //LARGER DATASET
 //const parks = require('../seeds/parks');
 
@@ -54,11 +54,11 @@ const seedDB = async()=>{
     //DELETING OUR DB EVERYTIME WE RE-SEED OUR DATABASE
     await Park.deleteMany({});
 
-    for(let i = 0; i < smallerParks.length; i++){
+    for(let i = 0; i < parks.length; i++){
         const park = new Park({
-            name: `${caseString(smallerParks[i].Name)}`,
-            location: `${smallerParks[i].Location}`,
-            courts: smallerParks[i].Num_of_Courts,
+            name: `${caseString(parks[i].Name)}`,
+            location: `${parks[i].Location}`,
+            courts: parks[i].Num_of_Courts,
             description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita quo saepe vitae nemo neque? Eius in natus incidunt adipisci corporis, atque odio culpa dicta earum iusto exercitationem sunt quia possimus? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magni nesciunt repellendus deleniti, molestias error beatae doloremque id. Eum recusandae, in quasi ab laudantium amet. Tenetur maxime non provident ab blanditiis? Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt deleniti ratione nobis. Ipsum assumenda suscipit neque ullam facilis dignissimos est perspiciatis velit voluptate quam possimus, similique deleniti odio fugit alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit ratione necessitatibus, rerum nostrum sint asperiores ullam dolorem velit cum doloribus dolorum! Ut, tenetur quisquam enim maiores quod ipsa magnam illo!'
         });
         await park.save();

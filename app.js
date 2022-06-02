@@ -18,15 +18,25 @@ async function main() {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-//ROUTES
+/////////////////////**ROUTES**//////////////////////
 app.get('/',(req,res)=>{
     res.render('home');
 });
 
+//INDEX OF PARKS
 app.get('/parks',async(req,res)=>{
     const parks = await Park.find();  
     res.render('parks/index', {parks});
 });
+
+//
+app.get('/parks/:id',async(req,res)=>{
+    const {id} = req.params;
+    const park = await Park.findById(id);
+    //console.log(park);
+    res.render('parks/show', {park});
+})
+////////////////////////////////////////////////////
 
 //LISTENER
 app.listen(3000,()=>{
