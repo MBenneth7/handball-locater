@@ -10,6 +10,10 @@ INSTALLATION FOR MAC
 
 https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/#install-mongodb-community-edition
 
+INSTALLATION FOR WINDOWS
+
+https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/
+
 BEFORE RUNNING APP ON A SERVER, SEED THE DATABASE FIRST WITH THE INDEX FILE IN 'seeds'
 DIRECTORY
 
