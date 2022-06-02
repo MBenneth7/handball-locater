@@ -3793,7 +3793,7 @@ module.exports = [
     },
     {
       Prop_ID: "Q104",
-      Name: "QUEENSBRIDGE \ BABY\ PARK",
+      Name: "QUEENSBRIDGE\ BABY\ PARK",
       Location: "VERNON BLVD, 21 ST, BRIDGE PLAZA S",
       Num_of_Courts: "6",
       lat: null,
