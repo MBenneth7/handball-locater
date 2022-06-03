@@ -36,7 +36,17 @@ app.get('/parks',async(req,res)=>{
     res.render('parks/index', {parks});
 });
 
-//
+//REGISTER PAGE FOR USER
+app.get('/register',(req,res)=>{
+    res.render('auth/register');
+});
+
+//LOGIN PAGE FOR USER
+app.get('/login',(req,res)=>{
+    res.render('auth/login');
+});
+
+//PROFILE PAGE OF PARK
 app.get('/parks/:id',async(req,res)=>{
     const {id} = req.params;
     const park = await Park.findById(id);
