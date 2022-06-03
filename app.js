@@ -15,6 +15,10 @@ async function main() {
   console.log('Connected to HandBall DB')
 }
 
+////////// **PARSING 'post' REQUESTS **//////////////
+app.use(express.urlencoded({extended: true}));
+/////////////////////////////////////////////////////
+
 //USING 'ejs' TO SET UP TEMPLATES FOR WEBPAGES//////
 
 //EJS MATE
@@ -26,6 +30,7 @@ app.set('views', path.join(__dirname, 'views'));
 ///////////////////////////////////////////////////
 
 /////////////////////**ROUTES**//////////////////////
+
 app.get('/',(req,res)=>{
     res.render('home');
 });
@@ -39,6 +44,11 @@ app.get('/parks',async(req,res)=>{
 //REGISTER PAGE FOR USER
 app.get('/register',(req,res)=>{
     res.render('auth/register');
+});
+
+app.post('/register',(req,res)=>{
+    const {username, email, password} = req.body;
+    res.send(req.body);
 });
 
 //LOGIN PAGE FOR USER
