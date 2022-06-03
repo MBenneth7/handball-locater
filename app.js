@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const path = require('path');
+const ejsMate = require('ejs-mate');
 
 const Park = require('./models/park');
 
@@ -14,9 +15,15 @@ async function main() {
   console.log('Connected to HandBall DB')
 }
 
-//USING 'ejs' TO SET UP TEMPLATES FOR WEBPAGES
+//USING 'ejs' TO SET UP TEMPLATES FOR WEBPAGES//////
+
+//EJS MATE
+app.engine('ejs', ejsMate);
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+///////////////////////////////////////////////////
 
 /////////////////////**ROUTES**//////////////////////
 app.get('/',(req,res)=>{
