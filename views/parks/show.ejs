@@ -1,6 +1,9 @@
 <% layout('layouts/boilerplate.ejs') %> 
 
 <h1><%= park.name %></h1>
+<div>
+    <img src = '<%= park.image %>'>
+</div>
 <h3><%= park.location %> </h3>
 <h4>Number of Courts: <%= park.courts %></h4>
 <p><%= park.description %> </p>

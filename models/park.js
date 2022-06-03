@@ -8,6 +8,7 @@ const ParkSchema = new Schema({
     location: String,
     courts: Number,
     description: String,
+    image: String
 });
 
 module.exports = mongoose.model('Park', ParkSchema);
