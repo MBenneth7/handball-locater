@@ -5,6 +5,7 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 
 const Park = require('./models/park');
+const User = require('./models/user');
 
 
 //USING MONGO DB
@@ -46,14 +47,39 @@ app.get('/register',(req,res)=>{
     res.render('auth/register');
 });
 
-app.post('/register',(req,res)=>{
+//SAVING USER DATA INTO DB
+app.post('/register',async(req,res)=>{
     const {username, email, password} = req.body;
-    res.send(req.body);
+
+    const user = new User({
+        username: username,
+        email: email,
+        password: password
+    });
+
+    await user.save();
+    console.log(user);
+
+    res.redirect('/parks');
+    //res.send(req.body);
 });
 
 //LOGIN PAGE FOR USER
 app.get('/login',(req,res)=>{
     res.render('auth/login');
+});
+
+//LOGGING IN
+app.post('/login',async(req,res)=>{
+    const{username, password} = req.body;
+    const user = await User.find({username});
+
+    if(password!==user[0].password){
+        res.send('Invalid Login');
+    }
+    else{
+        res.send('Welcome');
+    }
 });
 
 //PROFILE PAGE OF PARK
