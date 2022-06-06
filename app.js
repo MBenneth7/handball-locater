@@ -6,8 +6,10 @@ const ejsMate = require('ejs-mate');
 
 const Park = require('./models/park');
 const User = require('./models/user');
+const Review = require ('./models/review');
 const ExpressError = require('./utilities/ExpressError');
 const catchAsync = require('./utilities/catchAsync');
+const park = require('./models/park');
 
 
 //USING MONGO DB
@@ -50,7 +52,7 @@ app.get('/register',(req,res)=>{
 });
 
 //SAVING USER DATA INTO DB
-app.post('/register',async(req,res)=>{
+app.post('/register',catchAsync(async(req,res)=>{
     const {username, email, password} = req.body;
 
     const user = new User({
@@ -64,7 +66,7 @@ app.post('/register',async(req,res)=>{
 
     res.redirect('/parks');
     //res.send(req.body);
-});
+}));
 
 //LOGIN PAGE FOR USER
 app.get('/login',(req,res)=>{
@@ -72,7 +74,7 @@ app.get('/login',(req,res)=>{
 });
 
 //LOGGING IN
-app.post('/login',async(req,res)=>{
+app.post('/login',catchAsync(async(req,res)=>{
     const{username, password} = req.body;
     const user = await User.find({username});
 
@@ -86,7 +88,7 @@ app.post('/login',async(req,res)=>{
         console.log('Login Successful, Welcome!!!');
         res.redirect('/parks');
     }
-});
+}));
 
 //PROFILE PAGE OF PARK
 app.get('/parks/:id',catchAsync(async(req,res)=>{
@@ -95,6 +97,22 @@ app.get('/parks/:id',catchAsync(async(req,res)=>{
     //console.log(park);
     res.render('parks/show', {park});
 }));
+
+//POSTING A REVIEW FOR A PARK
+app.post('/parks/:id/reviews', catchAsync(async(req,res)=>{
+    const {id} = req.params;
+    const park = await Park.findById(id);
+    const review = new Review(req.body.review);
+
+    //ADDING A 'review'  TO A SPECEFIC PARK
+    park.reviews.push(review);
+
+    await review.save();
+    await park.save();
+
+    res.redirect(`/parks/${park._id}`);
+}));
+
 
 //MIDDLEWARE ROUTE HANDLER FOR ROUTES NOT FOUND
 app.all('*',(req,res,next)=>{
