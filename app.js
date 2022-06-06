@@ -7,6 +7,7 @@ const ejsMate = require('ejs-mate');
 const Park = require('./models/park');
 const User = require('./models/user');
 const ExpressError = require('./utilities/ExpressError');
+const catchAsync = require('./utilities/catchAsync');
 
 
 //USING MONGO DB
@@ -88,12 +89,12 @@ app.post('/login',async(req,res)=>{
 });
 
 //PROFILE PAGE OF PARK
-app.get('/parks/:id',async(req,res)=>{
+app.get('/parks/:id',catchAsync(async(req,res)=>{
     const {id} = req.params;
     const park = await Park.findById(id);
     //console.log(park);
     res.render('parks/show', {park});
-});
+}));
 
 //MIDDLEWARE ROUTE HANDLER FOR ROUTES NOT FOUND
 app.all('*',(req,res,next)=>{
