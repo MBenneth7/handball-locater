@@ -6,6 +6,7 @@ const ejsMate = require('ejs-mate');
 
 const Park = require('./models/park');
 const User = require('./models/user');
+const ExpressError = require('./utilities/ExpressError');
 
 
 //USING MONGO DB
@@ -74,11 +75,15 @@ app.post('/login',async(req,res)=>{
     const{username, password} = req.body;
     const user = await User.find({username});
 
+    //password!==user[0].password
+
     if(password!==user[0].password){
-        res.send('Invalid Login');
+        console.log('Invalid Login');
+        res.redirect('/parks');
     }
     else{
-        res.send('Welcome');
+        console.log('Login Successful, Welcome!!!');
+        res.redirect('/parks');
     }
 });
 
@@ -88,7 +93,25 @@ app.get('/parks/:id',async(req,res)=>{
     const park = await Park.findById(id);
     //console.log(park);
     res.render('parks/show', {park});
-})
+});
+
+//MIDDLEWARE ROUTE HANDLER FOR ROUTES NOT FOUND
+app.all('*',(req,res,next)=>{
+    //PASSING THE ERROR TO THE MIDDLEWARE ERROR HANDLER FOR ANYTHING
+    next(new ExpressError('404 Page Not Found', 404));
+});
+
+//MIDDLEWARE ERROR HANDLER FOR ANYTHING
+app.use((err,req,res,next)=>{
+    //DEFAULT ASSIGNMENT IF 'statusCode' ISN'T FOUND IN 'err'
+    const {statusCode = 500} = err;
+    //DEFAULT 'err.message' IF NO 'err.message'
+    if(!err.message) err.message = 'Oh No Something went wrong...';
+    //SENDING BACK ERROR
+    res.status(statusCode).render('error', {err});
+});
+
+
 ////////////////////////////////////////////////////
 
 //LISTENER
