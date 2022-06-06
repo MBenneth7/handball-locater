@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const path = require('path');
 const ejsMate = require('ejs-mate');
+const methodOverride = require('method-override');
 
 const Park = require('./models/park');
 const User = require('./models/user');
@@ -28,6 +29,11 @@ app.use(express.static(path.join(__dirname,'public')));
 ////////// **PARSING 'post' REQUESTS **//////////////
 app.use(express.urlencoded({extended: true}));
 /////////////////////////////////////////////////////
+
+////METHOD OVERRIDE, USE TO DO OTHER REQUESTS BESIDES 'get' AND 'post'////
+//USE: npm i method-override
+app.use(methodOverride('_method'));
+//////////////////////////////////////////////////////////////////////////
 
 //USING 'ejs' TO SET UP TEMPLATES FOR WEBPAGES//////
 
@@ -98,8 +104,9 @@ app.post('/login',catchAsync(async(req,res)=>{
 //PROFILE PAGE OF PARK
 app.get('/parks/:id',catchAsync(async(req,res)=>{
     const {id} = req.params;
-    const park = await Park.findById(id);
-    //console.log(park);
+    //'populate' USED TO SHOW 'reviews' ASSOCIATED W/PARK
+    const park = await Park.findById(id).populate('reviews');
+    console.log(park);
     res.render('parks/show', {park});
 }));
 
@@ -116,6 +123,14 @@ app.post('/parks/:id/reviews', validateReview, catchAsync(async(req,res)=>{
     await park.save();
 
     res.redirect(`/parks/${park._id}`);
+}));
+
+//DELETING A REVIEW FOR A PARK
+app.delete('/parks/:id/reviews/:reviewId', catchAsync(async(req,res)=>{
+    const {id, reviewId} = req.params;
+    await Park.findByIdAndUpdate( id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/parks/${id}`);
 }));
 
 
