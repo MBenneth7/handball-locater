@@ -1,12 +1,21 @@
 <% layout('layouts/boilerplate.ejs') %> 
 
 <h1><%= park.name %></h1>
-<div>
-    <img class = 'img-fluid' src = '<%= park.image %>'>
-</div>
-<h3><%= park.location %> </h3>
-<h4>Number of Courts: <%= park.courts %></h4>
-<p><%= park.description %> </p>
+<h5 class = 'pb-3'><%= park.location %> </h5>
+<div class = row>
+    <div class = 'col-7'>
+        <div class = 'pb-3'>
+            <img class = 'img-fluid' src = '<%= park.image %>'>
+        </div>
+        <h4>Number of Courts: <%= park.courts %></h4>
+        <p><%= park.description %> </p>
+    </div>
+    <div class = 'col-5'>
+        <p>Insert Map here...</p>
+        <p>Insert reviews here...</p>
+    </div>    
+
+</div>    
 
 <div>
     <a href="/parks">Back to All Parks</a>
