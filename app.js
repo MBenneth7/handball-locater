@@ -9,7 +9,8 @@ const User = require('./models/user');
 const Review = require ('./models/review');
 const ExpressError = require('./utilities/ExpressError');
 const catchAsync = require('./utilities/catchAsync');
-const park = require('./models/park');
+const {validateReview} = require('./utilities/middleware');
+
 
 
 //USING MONGO DB
@@ -19,6 +20,10 @@ async function main() {
   await mongoose.connect('mongodb://localhost:27017/handball');
   console.log('Connected to HandBall DB')
 }
+
+//SERVING PUBLIC ASSETS W/EXPRESS
+//WILL DEFAULT INTO SEARCHING THE 'public' DIRECTORY
+app.use(express.static(path.join(__dirname,'public')));
 
 ////////// **PARSING 'post' REQUESTS **//////////////
 app.use(express.urlencoded({extended: true}));
@@ -99,7 +104,7 @@ app.get('/parks/:id',catchAsync(async(req,res)=>{
 }));
 
 //POSTING A REVIEW FOR A PARK
-app.post('/parks/:id/reviews', catchAsync(async(req,res)=>{
+app.post('/parks/:id/reviews', validateReview, catchAsync(async(req,res)=>{
     const {id} = req.params;
     const park = await Park.findById(id);
     const review = new Review(req.body.review);
