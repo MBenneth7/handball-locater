@@ -98,7 +98,7 @@ app.get('/parks/:id',async(req,res)=>{
 //MIDDLEWARE ROUTE HANDLER FOR ROUTES NOT FOUND
 app.all('*',(req,res,next)=>{
     //PASSING THE ERROR TO THE MIDDLEWARE ERROR HANDLER FOR ANYTHING
-    next(new ExpressError('404 Page Not Found', 404));
+    next(new ExpressError('Page not found', 404));
 });
 
 //MIDDLEWARE ERROR HANDLER FOR ANYTHING
@@ -106,7 +106,7 @@ app.use((err,req,res,next)=>{
     //DEFAULT ASSIGNMENT IF 'statusCode' ISN'T FOUND IN 'err'
     const {statusCode = 500} = err;
     //DEFAULT 'err.message' IF NO 'err.message'
-    if(!err.message) err.message = 'Oh No Something went wrong...';
+    if(!err.message) err.message = "That's our fault...";
     //SENDING BACK ERROR
     res.status(statusCode).render('error', {err});
 });
