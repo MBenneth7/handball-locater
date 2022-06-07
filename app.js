@@ -142,6 +142,16 @@ app.post('/login', passport.authenticate('local', {failureFlash: true, failureRe
     res.redirect('/parks');
 }));
 
+//LOGOUT
+app.get('/logout', (req,res,next)=>{
+    req.logout((err)=>{
+        if(err){
+            return next(err);
+        }
+        req.flash('success', 'Successfully logged out!!!');
+        res.redirect('/parks');
+    });
+})
 
 //PROFILE PAGE OF PARK
 app.get('/parks/:id',catchAsync(async(req,res)=>{
