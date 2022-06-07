@@ -14,7 +14,7 @@ const User = require('./models/user');
 const Review = require ('./models/review');
 const ExpressError = require('./utilities/ExpressError');
 const catchAsync = require('./utilities/catchAsync');
-const {validateReview} = require('./utilities/middleware');
+const {validateReview, isLoggedIn} = require('./utilities/middleware');
 
 
 
@@ -138,7 +138,7 @@ app.post('/login', passport.authenticate('local', {failureFlash: true, failureRe
     
     const {username} = req.body;
     
-    req.flash('success', `Welcome Back ${username}`);
+    req.flash('success', `Welcome Back ${username}!!!`);
     res.redirect('/parks');
 }));
 
@@ -160,7 +160,7 @@ app.get('/parks/:id',catchAsync(async(req,res)=>{
 }));
 
 //POSTING A REVIEW FOR A PARK
-app.post('/parks/:id/reviews', validateReview, catchAsync(async(req,res)=>{
+app.post('/parks/:id/reviews', isLoggedIn, validateReview, catchAsync(async(req,res)=>{
     const {id} = req.params;
     const park = await Park.findById(id);
     const review = new Review(req.body.review);
@@ -176,10 +176,12 @@ app.post('/parks/:id/reviews', validateReview, catchAsync(async(req,res)=>{
 }));
 
 //DELETING A REVIEW FOR A PARK
-app.delete('/parks/:id/reviews/:reviewId', catchAsync(async(req,res)=>{
+app.delete('/parks/:id/reviews/:reviewId', isLoggedIn, catchAsync(async(req,res)=>{
     const {id, reviewId} = req.params;
     await Park.findByIdAndUpdate( id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
+
+    req.flash('success', 'Deleted Review!!!');
     res.redirect(`/parks/${id}`);
 }));
 

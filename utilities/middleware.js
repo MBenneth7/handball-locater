@@ -15,3 +15,13 @@ module.exports.validateReview = (req, res, next) =>{
         next();
     }
 }
+
+//CHECKING IF USER IS LOGGED IN
+
+module.exports.isLoggedIn = (req, res, next) =>{
+    if(!req.isAuthenticated()){
+        req.flash('error', 'You must be signed in');
+        return res.redirect('/login');
+    }
+    next();
+}
