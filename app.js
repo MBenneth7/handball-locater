@@ -133,21 +133,15 @@ app.get('/login',(req,res)=>{
 });
 
 //LOGGING IN
-app.post('/login',catchAsync(async(req,res)=>{
-    const{username, password} = req.body;
-    const user = await User.find({username});
-
-    //password!==user[0].password
-
-    if(password!==user[0].password){
-        console.log('Invalid Login');
-        res.redirect('/parks');
-    }
-    else{
-        console.log('Login Successful, Welcome!!!');
-        res.redirect('/parks');
-    }
+//PASSPORT MIDDLEWARE ADDED TO AUTHETICATE USER
+app.post('/login', passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), catchAsync(async(req,res)=>{
+    
+    const {username} = req.body;
+    
+    req.flash('success', `Welcome Back ${username}`);
+    res.redirect('/parks');
 }));
+
 
 //PROFILE PAGE OF PARK
 app.get('/parks/:id',catchAsync(async(req,res)=>{
