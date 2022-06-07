@@ -13,10 +13,15 @@
 <body class = 'd-flex flex-column vh-100'>
     
     <%- include('../partials/navbar.ejs') -%> 
+
     <div class = 'container mt-5 mb-3'>
-    <%= success %> 
-    <%- body -%>
+
+        <!--FLASH-->    
+        <%- include('../partials/flash.ejs') %> 
+
+        <%- body -%>
     </div>
+    
     <%- include('../partials/footer.ejs') -%> 
 
     <!--BOOTSTRAP SCRIPT-->

@@ -72,8 +72,9 @@ app.use((req,res,next)=>{
 
     //GRANTING ROUTES GLOBAL ACCESS TO FLASH ON EACH ROUTE
     res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
     next();
-})
+});
 
 /////////////////////////////////////////////////////
 /////////////////////**ROUTES**//////////////////////
