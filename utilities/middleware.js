@@ -19,6 +19,10 @@ module.exports.validateReview = (req, res, next) =>{
 //CHECKING IF USER IS LOGGED IN
 
 module.exports.isLoggedIn = (req, res, next) =>{
+
+    //'req.user' IS FROM PASSPORT
+    //console.log('REQ.USER...', req.user);
+
     if(!req.isAuthenticated()){
         req.flash('error', 'You must be signed in');
         return res.redirect('/login');

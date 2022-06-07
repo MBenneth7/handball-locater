@@ -82,6 +82,10 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
 
+    //GRANTING ALL ROUTES TO 'user' PROVIDED BY PASSPORT 'req.user'
+
+    res.locals.currentUser = req.user;
+
     //GRANTING ROUTES GLOBAL ACCESS TO FLASH ON EACH ROUTE
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
@@ -135,10 +139,10 @@ app.get('/login',(req,res)=>{
 //LOGGING IN
 //PASSPORT MIDDLEWARE ADDED TO AUTHETICATE USER
 app.post('/login', passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), catchAsync(async(req,res)=>{
-    
-    const {username} = req.body;
-    
-    req.flash('success', `Welcome Back ${username}!!!`);
+
+    //'req.user.username' ACCESSIBLE FROM OUR GLOBAL MIDDLEWARE WHICH PROVIDES res.local
+
+    req.flash('success', `Welcome Back ${req.user.username}!!!`);
     res.redirect('/parks');
 }));
 
@@ -165,7 +169,7 @@ app.get('/parks/:id',catchAsync(async(req,res)=>{
         return res.redirect('/parks');
     }
 
-    console.log(park);
+    //console.log(park);
     res.render('parks/show', {park});
 }));
 
