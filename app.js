@@ -5,6 +5,7 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const methodOverride = require('method-override');
+const flash = require('connect-flash');
 
 const Park = require('./models/park');
 const User = require('./models/user');
@@ -36,7 +37,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 //////////////////////////////////////////////////////////////////////////
 
-//USING 'ejs' TO SET UP TEMPLATES FOR WEBPAGES//////
+//USING 'ejs' TO SET UP TEMPLATES FOR WEBPAGES/////////
 
 //EJS MATE
 app.engine('ejs', ejsMate);
@@ -44,20 +45,37 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-///////////////////////////////////////////////////
-
-//////////////** EXPRESS SESSION **/////////////////
+//////////////////////////////////////////////////////
+//////////////** EXPRESS SESSION & COOKIES **//////////////////
 
 const sessionConfig = {
     secret: 'thisisnotagoodsecret',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //EXPIRATION FOR COOKIE
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
 }
-
 app.use(session(sessionConfig));
 
-/////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+////////////////////** FLASH **////////////////////// 
 
+app.use(flash());
+
+/////////////////////////////////////////////////////
+//////////////** GLOBAL MIDDLEWARE **////////////////
+
+app.use((req,res,next)=>{
+
+    //GRANTING ROUTES GLOBAL ACCESS TO FLASH ON EACH ROUTE
+    res.locals.success = req.flash('success');
+    next();
+})
+
+/////////////////////////////////////////////////////
 /////////////////////**ROUTES**//////////////////////
 
 app.get('/',(req,res)=>{
@@ -135,6 +153,7 @@ app.post('/parks/:id/reviews', validateReview, catchAsync(async(req,res)=>{
     await review.save();
     await park.save();
 
+    req.flash('success', 'Review successfully made!!!');
     res.redirect(`/parks/${park._id}`);
 }));
 
