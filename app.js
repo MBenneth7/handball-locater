@@ -6,6 +6,8 @@ const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
 
 const Park = require('./models/park');
 const User = require('./models/user');
@@ -66,6 +68,16 @@ app.use(session(sessionConfig));
 app.use(flash());
 
 /////////////////////////////////////////////////////
+//////** PASSPORT (LOGINS & AUTHENTICATION) **///////
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+/////////////////////////////////////////////////////
 //////////////** GLOBAL MIDDLEWARE **////////////////
 
 app.use((req,res,next)=>{
@@ -96,19 +108,23 @@ app.get('/register',(req,res)=>{
 
 //SAVING USER DATA INTO DB
 app.post('/register',catchAsync(async(req,res)=>{
-    const {username, email, password} = req.body;
 
-    const user = new User({
-        username: username,
-        email: email,
-        password: password
-    });
+    //TRY & CATCH FOR ANY POTENTIAL ERRORS IN REGISTERING
+    try{
+        const {username, email, password} = req.body;
+        const user = new User({username, email});
 
-    await user.save();
-    console.log(user);
+        //PASSPORT register(), TAKES 'password' HASHES AND SALTS IT, SAVES USER INTO DATABASE 
+        const registeredUser = await User.register(user, password);
 
-    res.redirect('/parks');
-    //res.send(req.body);
+        console.log(registeredUser);
+        req.flash('success','Welcome to Handball Locator!!!');
+        res.redirect('/parks');
+
+    }catch(e){
+        req.flash('error', e.message)
+        res.redirect('/register')
+    }
 }));
 
 //LOGIN PAGE FOR USER
@@ -138,7 +154,7 @@ app.get('/parks/:id',catchAsync(async(req,res)=>{
     const {id} = req.params;
     //'populate' USED TO SHOW 'reviews' ASSOCIATED W/PARK
     const park = await Park.findById(id).populate('reviews');
-    
+
     //REDIRECT IF PARK NOT FOUND
     if(!park){
         req.flash('error', 'Park not found!!!');
