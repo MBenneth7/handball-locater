@@ -3,6 +3,8 @@ const { reviewSchema } = require('./joiSchemas'); //FROM 'schemas.js' USING 'joi
 const Park = require('../models/park');
 const Review = require('../models/review');
 
+//VALIDATING THE REVIEWS ON THE SERVER SIDE
+
 module.exports.validateReview = (req, res, next) =>{
     const {error} = reviewSchema.validate(req.body);
     if(error){

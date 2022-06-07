@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const path = require('path');
 const ejsMate = require('ejs-mate');
+const session = require('express-session');
 const methodOverride = require('method-override');
 
 const Park = require('./models/park');
@@ -44,6 +45,18 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 ///////////////////////////////////////////////////
+
+//////////////** EXPRESS SESSION **/////////////////
+
+const sessionConfig = {
+    secret: 'thisisnotagoodsecret',
+    resave: false,
+    saveUninitialized: true
+}
+
+app.use(session(sessionConfig));
+
+/////////////////////////////////////////////////////
 
 /////////////////////**ROUTES**//////////////////////
 
