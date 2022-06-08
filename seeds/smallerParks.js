@@ -32,12 +32,12 @@ module.exports = [
         lon: "-73.7288"
     },
     {
-        Prop_ID: "Q002",
-        Name: "GROVER CLEVELAND PARK",
-        Location: "FAIRVIEW AV/STANHOPE ST/GRANDVW AV",
+        Prop_ID: "Q294",
+        Name: "UTOPIA P/G",
+        Location: "73 AVE, JEWEL AVE, UTOPIA PKWY",
         Num_of_Courts: "4",
-        lat: null,
-        lon: null
+        lat: "40.7304",
+        lon: "-73.7927"
     },
     {
         Prop_ID: "Q358",

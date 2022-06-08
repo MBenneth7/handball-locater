@@ -16,7 +16,7 @@
     </div>
 
     <div class = 'col-5'>
-        <div id='map' class = 'mb-3' style='width: 100%; height: 300px;'></div>
+        <div id='map' class = 'mb-3' style='width: 100%; height: 40%;'></div>
         <h2>Leave a Review</h2>
         <form action = '/parks/<%= park._id %>/reviews' method = 'POST' class = 'validated-form' novalidate>
             <div class = 'mb-3'>
@@ -59,8 +59,11 @@
 </div>
 
 <script>
+    //SENDING THIS TO 'showPageMap.js'
+
     //FROM ''.env' FILE
     const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
-    //USE IN 'showPageMap.js'
+    //ACCESSING PARK DATA
+    const park = <%-JSON.stringify(park)%>
 </script>
 <script src = '/scripts/showPageMap.js'></script>
