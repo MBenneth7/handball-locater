@@ -16,7 +16,7 @@
     </div>
 
     <div class = 'col-5'>
-        <p>Insert Map here...</p>
+        <div id='map' class = 'mb-3' style='width: 100%; height: 300px;'></div>
         <h2>Leave a Review</h2>
         <form action = '/parks/<%= park._id %>/reviews' method = 'POST' class = 'validated-form' novalidate>
             <div class = 'mb-3'>
@@ -58,3 +58,9 @@
     <a href="/parks">Back to All Parks</a>
 </div>
 
+<script>
+    //FROM ''.env' FILE
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+    //USE IN 'showPageMap.js'
+</script>
+<script src = '/scripts/showPageMap.js'></script>
