@@ -20,12 +20,27 @@ module.exports.validateReview = (req, res, next) =>{
 
 module.exports.isLoggedIn = (req, res, next) =>{
 
-    //'req.user' IS FROM PASSPORT
-    //console.log('REQ.USER...', req.user);
-
     if(!req.isAuthenticated()){
+
+        //KEEPING TRACK OF WHERE THE USER WAS DURING LOGIN, WE ADD TO THE 'req.session' OBJECT 'returnTo
+        req.session.returnTo = req.originalUrl;
+
         req.flash('error', 'You must be signed in');
         return res.redirect('/login');
     }
+    next();
+}
+
+//CHECKING IF YOU ARE THE OWNER OF A REIVEW ON THE SERVER SIDE
+
+module.exports.isReviewAuthor = async(req, res, next)=>{
+    const{ id, reviewId } = req.params;
+    const review = await Review.findById(reviewId);
+
+    if(!review.author.equals(req.user._id)){
+        req.flash('error', 'You do not have permission to do that!');
+        return res.redirect(`/parks/${id}`);
+    }
+
     next();
 }

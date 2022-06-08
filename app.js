@@ -14,7 +14,7 @@ const User = require('./models/user');
 const Review = require ('./models/review');
 const ExpressError = require('./utilities/ExpressError');
 const catchAsync = require('./utilities/catchAsync');
-const {validateReview, isLoggedIn} = require('./utilities/middleware');
+const {validateReview, isLoggedIn, isReviewAuthor} = require('./utilities/middleware');
 
 
 
@@ -82,8 +82,9 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
 
-    //GRANTING ALL ROUTES TO 'user' PROVIDED BY PASSPORT 'req.user'
+    console.log(req.session);
 
+    //GRANTING ALL ROUTES TO 'user' PROVIDED BY PASSPORT 'req.user'
     res.locals.currentUser = req.user;
 
     //GRANTING ROUTES GLOBAL ACCESS TO FLASH ON EACH ROUTE
@@ -146,9 +147,15 @@ app.get('/login',(req,res)=>{
 app.post('/login', passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), catchAsync(async(req,res)=>{
 
     //'req.user.username' ACCESSIBLE FROM OUR GLOBAL MIDDLEWARE WHICH PROVIDES res.local
-
     req.flash('success', `Welcome Back ${req.user.username}!!!`);
-    res.redirect('/parks');
+
+    //REDIRECTING USER BACK TO PAGE AFTER LOGGING IN
+    const redirectUrl = req.session.returnTo || '/parks';
+
+    //DELETING THE 'req.session.returnTo'
+    delete req.session.returnTo;
+
+    res.redirect(redirectUrl);
 }));
 
 //LOGOUT
@@ -162,11 +169,17 @@ app.get('/logout', (req,res,next)=>{
     });
 })
 
-//PROFILE PAGE OF PARK
+//SHOW PROFILE PAGE OF PARK
 app.get('/parks/:id',catchAsync(async(req,res)=>{
     const {id} = req.params;
-    //'populate' USED TO SHOW 'reviews' ASSOCIATED W/PARK
-    const park = await Park.findById(id).populate('reviews');
+
+    //'populate' USED TO SHOW 'reviews' ASSOCIATED W/ PARK
+    const park = await Park.findById(id).populate({
+        path:'reviews',
+        populate: {
+            path: 'author'
+        }
+    });
 
     //REDIRECT IF PARK NOT FOUND
     if(!park){
@@ -174,7 +187,7 @@ app.get('/parks/:id',catchAsync(async(req,res)=>{
         return res.redirect('/parks');
     }
 
-    //console.log(park);
+    console.log(park);
     res.render('parks/show', {park});
 }));
 
@@ -183,6 +196,9 @@ app.post('/parks/:id/reviews', isLoggedIn, validateReview, catchAsync(async(req,
     const {id} = req.params;
     const park = await Park.findById(id);
     const review = new Review(req.body.review);
+
+    //ADDING THE 'req.user_id' TO THE AUTHOR FIELD OF OUR REVIEW DATA, ADDING A AUTHOR TO A REVIEW
+    review.author = req.user._id;
 
     //ADDING A 'review'  TO A SPECEFIC PARK
     park.reviews.push(review);
@@ -195,7 +211,7 @@ app.post('/parks/:id/reviews', isLoggedIn, validateReview, catchAsync(async(req,
 }));
 
 //DELETING A REVIEW FOR A PARK
-app.delete('/parks/:id/reviews/:reviewId', isLoggedIn, catchAsync(async(req,res)=>{
+app.delete('/parks/:id/reviews/:reviewId', isLoggedIn, isReviewAuthor, catchAsync(async(req,res)=>{
     const {id, reviewId} = req.params;
     await Park.findByIdAndUpdate( id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
