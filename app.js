@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== 'production'){
+    require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -16,7 +20,6 @@ const ExpressError = require('./utilities/ExpressError');
 const parkRoutes = require('./routes/parks');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
-
 
 
 //USING MONGO DB
@@ -102,8 +105,9 @@ app.use('/parks/:id/reviews', reviewRoutes);
 app.use('/', userRoutes);
 
 
-
+//HOMEPAGE
 app.get('/',(req,res)=>{
+    console.log(process.env.MAPBOX_TOKEN);
     res.render('home');
 });
 
@@ -122,7 +126,6 @@ app.use((err,req,res,next)=>{
     //SENDING BACK ERROR
     res.status(statusCode).render('error', {err});
 });
-
 
 ////////////////////////////////////////////////////
 
