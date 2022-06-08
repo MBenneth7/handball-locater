@@ -1,20 +1,6 @@
 <% layout('layouts/boilerplate.ejs') %> 
 
-<div id="map"></div>
-
 <h1>List Of All Parks</h1>
 <% for(let park of parks){ %>
     <h1><a href = '/parks/<%= park._id %>'><%= park.name %></a></h1>
 <% } %>
-
-<script>
-	mapboxgl.accessToken = 'pk.eyJ1IjoibWJlbm5ldGg3IiwiYSI6ImNsM29pZDlsZDBseWgzam95d2xvM2JidHoifQ.ei8IJniLihuJpCUqZfr6XA';
-    const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/light-v10',
-    center: [-77.04, 38.907],
-    zoom: 11.15,
-    attributionControl: false
-    });
-    map.addControl(new mapboxgl.AttributionControl(), 'top-left');
-</script>
