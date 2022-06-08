@@ -9,16 +9,13 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
-const Park = require('./models/park');
 const User = require('./models/user');
-const Review = require ('./models/review');
 const ExpressError = require('./utilities/ExpressError');
-const catchAsync = require('./utilities/catchAsync');
-const {validateReview, isLoggedIn, isReviewAuthor} = require('./utilities/middleware');
 
 //ROUTES
 const parkRoutes = require('./routes/parks');
 const reviewRoutes = require('./routes/reviews');
+const userRoutes = require('./routes/users');
 
 
 
@@ -102,76 +99,13 @@ app.use((req,res,next)=>{
 
 app.use('/parks', parkRoutes);
 app.use('/parks/:id/reviews', reviewRoutes);
+app.use('/', userRoutes);
 
 
 
 app.get('/',(req,res)=>{
     res.render('home');
 });
-
-//REGISTER PAGE FOR USER
-app.get('/register',(req,res)=>{
-    res.render('auth/register');
-});
-
-//SAVING USER DATA INTO DB
-app.post('/register',catchAsync(async(req,res,next)=>{
-
-    //TRY & CATCH FOR ANY POTENTIAL ERRORS IN REGISTERING
-    try{
-        const {username, email, password} = req.body;
-        const user = new User({username, email});
-
-        //PASSPORT register(), TAKES 'password' HASHES AND SALTS IT, SAVES USER INTO DATABASE 
-        const registeredUser = await User.register(user, password);
-
-        //PASSPORT 'login()' REGISTERS A USER AND SIGNS THEM IN
-        req.login(registeredUser, err =>{
-            //ERROR HANDLER, HANDS IT OVER TO OUR ERROR HANDLER BY MIDDLEWARE
-            if(err) return next(err);
-
-            console.log(registeredUser);
-            req.flash('success',`Welcome to Handball Locator ${user.username}!!!`);
-            res.redirect('/parks');
-        });
-    }catch(e){
-        req.flash('error', e.message)
-        res.redirect('/register')
-    }
-}));
-
-//LOGIN PAGE FOR USER
-app.get('/login',(req,res)=>{
-    res.render('auth/login');
-});
-
-//LOGGING IN
-//PASSPORT MIDDLEWARE ADDED TO AUTHETICATE USER
-app.post('/login', passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), catchAsync(async(req,res)=>{
-
-    //'req.user.username' ACCESSIBLE FROM OUR GLOBAL MIDDLEWARE WHICH PROVIDES res.local
-    req.flash('success', `Welcome Back ${req.user.username}!!!`);
-
-    //REDIRECTING USER BACK TO PAGE AFTER LOGGING IN
-    const redirectUrl = req.session.returnTo || '/parks';
-
-    //DELETING THE 'req.session.returnTo'
-    delete req.session.returnTo;
-
-    res.redirect(redirectUrl);
-}));
-
-//LOGOUT
-app.get('/logout', (req,res,next)=>{
-    req.logout((err)=>{
-        if(err){
-            return next(err);
-        }
-        req.flash('success', 'Successfully logged out!!!');
-        res.redirect('/parks');
-    });
-})
-
 
 //MIDDLEWARE ROUTE HANDLER FOR ROUTES NOT FOUND
 app.all('*',(req,res,next)=>{
