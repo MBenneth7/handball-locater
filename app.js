@@ -18,6 +18,7 @@ const {validateReview, isLoggedIn, isReviewAuthor} = require('./utilities/middle
 
 //ROUTES
 const parkRoutes = require('./routes/parks');
+const reviewRoutes = require('./routes/reviews');
 
 
 
@@ -100,6 +101,7 @@ app.use((req,res,next)=>{
 /////////////////////**ROUTES**//////////////////////
 
 app.use('/parks', parkRoutes);
+app.use('/parks/:id/reviews', reviewRoutes);
 
 
 
@@ -169,35 +171,6 @@ app.get('/logout', (req,res,next)=>{
         res.redirect('/parks');
     });
 })
-
-//POSTING A REVIEW FOR A PARK
-app.post('/parks/:id/reviews', isLoggedIn, validateReview, catchAsync(async(req,res)=>{
-    const {id} = req.params;
-    const park = await Park.findById(id);
-    const review = new Review(req.body.review);
-
-    //ADDING THE 'req.user_id' TO THE AUTHOR FIELD OF OUR REVIEW DATA, ADDING A AUTHOR TO A REVIEW
-    review.author = req.user._id;
-
-    //ADDING A 'review'  TO A SPECEFIC PARK
-    park.reviews.push(review);
-
-    await review.save();
-    await park.save();
-
-    req.flash('success', 'Review successfully made!!!');
-    res.redirect(`/parks/${park._id}`);
-}));
-
-//DELETING A REVIEW FOR A PARK
-app.delete('/parks/:id/reviews/:reviewId', isLoggedIn, isReviewAuthor, catchAsync(async(req,res)=>{
-    const {id, reviewId} = req.params;
-    await Park.findByIdAndUpdate( id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId);
-
-    req.flash('success', 'Deleted Review!!!');
-    res.redirect(`/parks/${id}`);
-}));
 
 
 //MIDDLEWARE ROUTE HANDLER FOR ROUTES NOT FOUND
