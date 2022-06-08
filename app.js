@@ -16,6 +16,9 @@ const ExpressError = require('./utilities/ExpressError');
 const catchAsync = require('./utilities/catchAsync');
 const {validateReview, isLoggedIn, isReviewAuthor} = require('./utilities/middleware');
 
+//ROUTES
+const parkRoutes = require('./routes/parks');
+
 
 
 //USING MONGO DB
@@ -96,14 +99,12 @@ app.use((req,res,next)=>{
 /////////////////////////////////////////////////////
 /////////////////////**ROUTES**//////////////////////
 
+app.use('/parks', parkRoutes);
+
+
+
 app.get('/',(req,res)=>{
     res.render('home');
-});
-
-//INDEX OF PARKS
-app.get('/parks',async(req,res)=>{
-    const parks = await Park.find();  
-    res.render('parks/index', {parks});
 });
 
 //REGISTER PAGE FOR USER
@@ -168,28 +169,6 @@ app.get('/logout', (req,res,next)=>{
         res.redirect('/parks');
     });
 })
-
-//SHOW PROFILE PAGE OF PARK
-app.get('/parks/:id',catchAsync(async(req,res)=>{
-    const {id} = req.params;
-
-    //'populate' USED TO SHOW 'reviews' ASSOCIATED W/ PARK
-    const park = await Park.findById(id).populate({
-        path:'reviews',
-        populate: {
-            path: 'author'
-        }
-    });
-
-    //REDIRECT IF PARK NOT FOUND
-    if(!park){
-        req.flash('error', 'Park not found!!!');
-        return res.redirect('/parks');
-    }
-
-    console.log(park);
-    res.render('parks/show', {park});
-}));
 
 //POSTING A REVIEW FOR A PARK
 app.post('/parks/:id/reviews', isLoggedIn, validateReview, catchAsync(async(req,res)=>{
