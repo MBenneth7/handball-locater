@@ -111,7 +111,7 @@ app.get('/register',(req,res)=>{
 });
 
 //SAVING USER DATA INTO DB
-app.post('/register',catchAsync(async(req,res)=>{
+app.post('/register',catchAsync(async(req,res,next)=>{
 
     //TRY & CATCH FOR ANY POTENTIAL ERRORS IN REGISTERING
     try{
@@ -121,10 +121,15 @@ app.post('/register',catchAsync(async(req,res)=>{
         //PASSPORT register(), TAKES 'password' HASHES AND SALTS IT, SAVES USER INTO DATABASE 
         const registeredUser = await User.register(user, password);
 
-        console.log(registeredUser);
-        req.flash('success','Welcome to Handball Locator!!!');
-        res.redirect('/parks');
+        //PASSPORT 'login()' REGISTERS A USER AND SIGNS THEM IN
+        req.login(registeredUser, err =>{
+            //ERROR HANDLER, HANDS IT OVER TO OUR ERROR HANDLER BY MIDDLEWARE
+            if(err) return next(err);
 
+            console.log(registeredUser);
+            req.flash('success',`Welcome to Handball Locator ${user.username}!!!`);
+            res.redirect('/parks');
+        });
     }catch(e){
         req.flash('error', e.message)
         res.redirect('/register')
