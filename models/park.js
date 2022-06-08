@@ -9,6 +9,15 @@ const ParkSchema = new Schema({
     courts: Number,
     description: String,
     image: String,
+    geometry:{
+        type: String,
+        enum: ['Point'],
+        required: true
+    },
+    coordinates:{
+        type: [Number],
+        required: true
+    },
     reviews: [
         {
             //LINKING OUR REVIEWS TO OUR PARKS
