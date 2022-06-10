@@ -13,7 +13,9 @@ new mapboxgl.Marker()
 .setPopup(
     new mapboxgl.Popup({offset: 25})
     .setHTML(
-        `<h6>${park.name}</h6>`
+        `<h6>${park.name}</h6>
+         <p>Number of Courts: <b>${park.courts}</b></p>   
+        `
     )
 )
 .addTo(map);
