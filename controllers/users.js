@@ -42,7 +42,7 @@ module.exports.login = (req,res)=>{
     req.flash('success', `Welcome Back ${req.user.username}!!!`);
 
     //REDIRECTING USER BACK TO PAGE AFTER LOGGING IN
-    const redirectUrl = req.session.returnTo || '/parks';
+    const redirectUrl = req.session.returnTo || '/parks/search';
 
     //DELETING THE 'req.session.returnTo'
     delete req.session.returnTo;
@@ -60,6 +60,6 @@ module.exports.logout = (req,res)=>{
         delete req.session.returnTo;
         
         req.flash('success', 'Successfully logged out!!!');
-        res.redirect('/parks');
+        res.redirect('/parks/search');
     });
 }

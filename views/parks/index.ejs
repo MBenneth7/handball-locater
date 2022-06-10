@@ -1,24 +1,28 @@
 <%- include('../partials/header.ejs')-%> 
 
+<!--ADDING 'seachbar.css' TO INDEX ROUTE ONLY-->
+<link rel = 'stylesheet' href = '/styles/searchbar.css'>
+
 <body class = 'vh-100'>
 
     <%- include('../partials/navbar.ejs') -%> 
 
-    <div id = 'cluster-map' style = 'width: 100%; height: 65vh;'>
+    <div id = 'cluster-map' style = 'width: 100%; height: 60vh;'>
     </div>
 
     <div class = 'container mt-5 mb-3'>
         <!--FLASH-->    
         <%- include('../partials/flash.ejs') %> 
 
-        <h1>List Of All Parks</h1>
-        <% for(let park of parks){ %>
-            <h1><a href = '/parks/<%= park._id %>'><%= park.name %></a></h1>
-        <% } %>
-    </div>    
-    
+        <div class = 'search-bar'>
+            <input id = 'search-box' type = 'text' placeholder = 'Search for a Park' onkeyup= 'sendData(this)' >
+            <button type = 'submit'><img class = 'img-fluid' src="/images/search.png" alt=""></button>
+        </div>
 
-    <%- include('../partials/footer.ejs') %> 
+        <div id = 'search-results'></div>
+
+    </div>    
+
 
     <!--BOOTSTRAP SCRIPT-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -29,5 +33,29 @@
     </script>
     <script src = '/scripts/showClusterMap.js'></script>
 
+    <script>
+        function sendData(e){
+            const searchResults = document.getElementById('search-results');
+            fetch('/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({payload: e.value})
+            })
+            .then(res => res.json())
+            .then(data =>{
+                let payload = data.payload;
+                searchResults.innerHTML = '';
+                if(payload.length < 1){
+                    searchResults.innerHTML = `<p>No Results</p>`;
+                    return;
+                }
+                payload.forEach((park, index)=>{
+                    if(index > 0) searchResults.innerHTML += '<hr>';
+                    searchResults.innerHTML += `<p><a href = "/parks/${park._id}">${park.name}</a></p>`;
+                });
+                return;
+            });
+        }
+    </script>
 </body>
 </html>

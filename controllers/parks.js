@@ -5,9 +5,10 @@ const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 mbxGeocoding({accessToken: mapBoxToken});
 
+
 module.exports.index = async(req,res)=>{
     const parks = await Park.find();  
-    res.render('parks/index', {parks});
+    res.render('parks/allParks', {parks});
 };
 
 module.exports.showPark = async(req,res)=>{
@@ -30,3 +31,8 @@ module.exports.showPark = async(req,res)=>{
     console.log(park);
     res.render('parks/show', {park});
 };
+
+module.exports.search = async(req,res)=>{
+    const parks = await Park.find();  
+    res.render('parks/index', {parks});
+}

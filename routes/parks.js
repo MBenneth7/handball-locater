@@ -15,9 +15,11 @@ router.route('/')
     //RENDER THE INDEX OF PARKS
     .get(catchAsync(parks.index));
 
+router.route('/search')
+    .get(catchAsync(parks.search));    
+
 router.route('/:id')
     //RENDER THE INDIVIDUAL PARK PROFILE PAGE
     .get(catchAsync(parks.showPark));    
-
 
 module.exports = router;    

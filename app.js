@@ -16,6 +16,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
 const User = require('./models/user');
+const Park = require('./models/park');
 const ExpressError = require('./utilities/ExpressError');
 
 //ROUTES
@@ -31,6 +32,9 @@ async function main() {
   await mongoose.connect('mongodb://localhost:27017/handball');
   console.log('Connected to HandBall DB')
 }
+
+//SEARCHBAR USE
+app.use(express.json());
 
 //SERVING PUBLIC ASSETS W/EXPRESS
 //WILL DEFAULT INTO SEARCHING THE 'public' DIRECTORY
@@ -110,6 +114,16 @@ app.use('/', userRoutes);
 //HOMEPAGE
 app.get('/',(req,res)=>{
     res.render('home');
+});
+
+//POST REQUEST FOR SEARCH RESULTS
+app.post('/', async(req,res) =>{
+    let payload = req.body.payload.trim();
+    //SEARCH FOR PARK AND THE REGEX EXPRESSION HANDLES CASE SENSITIVITY
+    let search = await Park.find( { name: { $regex: new RegExp('^' + payload + '.*', 'i') } } ).exec();
+    //LIMIT SEARCH RESULTS
+    search = search.slice(0,10);
+    res.send({payload: search});
 });
 
 //MIDDLEWARE ROUTE HANDLER FOR ROUTES NOT FOUND
