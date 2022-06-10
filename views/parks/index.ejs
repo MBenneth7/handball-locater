@@ -1,6 +1,15 @@
 <% layout('layouts/boilerplate.ejs') %> 
 
+<div id = 'cluster-map' style = 'width: 100%; height: 60vh;'></div>
+
 <h1>List Of All Parks</h1>
 <% for(let park of parks){ %>
     <h1><a href = '/parks/<%= park._id %>'><%= park.name %></a></h1>
 <% } %>
+
+<script>
+    //ADDING OUR MAPBOX TOKEN TO ALLOW USE OF MAPBOX MAP
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+    const parks = {features: <%- JSON.stringify(parks) %>};
+</script>
+<script src = '/scripts/showClusterMap.js'></script>

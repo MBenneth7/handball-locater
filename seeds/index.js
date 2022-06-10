@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Park = require('../models/park');
 //SMALLER DATAS SET
-const parks = require ('../seeds/smallerParks');
+//const parks = require ('../seeds/smallerParks');
 //LARGER DATASET
-//const parks = require('../seeds/parks');
+const parks = require('../seeds/parks');
 
 //USING MONGO DB
 main().catch(err => console.log(err, 'OH NO MONGO ERROR!!!'));
