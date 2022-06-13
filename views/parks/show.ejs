@@ -16,10 +16,53 @@
                 <p class = 'card-text'> <%= park.description %> </p>
             </div>
         </div>
+
+        <div>
+            <div>Conversation</div>
+        </div>
     </div>
 
     <div class = 'col-5'>
         <div id='map' class = 'mb-3' style='width: 100%; height: 350px;'></div>
+
+        <!--DISPLAYING REVIEWS-->
+        <div class = "<%= park.reviews.length === 0 ? 'display:none':'my-3 card'%>">
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                <%for(let i = 0; i < park.reviews.length; i++){ %>     
+                    <div class="<%= i === 0 ? 'carousel-item active':'carousel-item'%>">
+                        <div class = 'container'>
+                                <div class = 'my-1 p-2'>
+                                    <div class = 'd-flex flex-column align-items-center'>
+                                        <h6 class = 'card-title mb-2'><%= park.reviews[i].author.username %></h6>
+                                        <p class="starability-result" data-rating="<%= park.reviews[i].rating %>">
+                                            Rated: <%= park.reviews[i].rating %> Stars 
+                                        </p>
+                                        <p class = 'card-text'><%= park.reviews[i].body %></p>
+                        
+                                        <!--HIDING DELETE BUTTON IF YOU'RE NOT THE OWNER OF REVIEW-->
+                                        <% if(currentUser && park.reviews[i].author.equals(currentUser._id)){ %> 
+                                        <form action = '/parks/<%= park._id %>/reviews/<%= park.reviews[i]._id %>?_method=DELETE' method = 'POST'>
+                                            <button class = 'btn btn-sm btn-danger'>Delete</button>
+                                        </form>    
+                                        <% } %>     
+                                    </div>    
+                                </div>
+                        </div>
+                    </div>
+                <% } %> 
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
         <h2>Leave a Review</h2>
         <form action = '/parks/<%= park._id %>/reviews' method = 'POST' class = 'validated-form' novalidate>
             <div>  
@@ -38,7 +81,7 @@
                     <label for="first-rate5" title="Amazing">5 stars</label>
                 </fieldset>
             </div>    
-            <div class = 'mb-3'>
+            <div class = 'mb-2'>
                 <label class = 'form-label' for='body'>Review</label>
                 <textarea class = 'form-control' name = 'review[body]' id = 'body' cols = '30' row = '10' required></textarea>
                 <div class = 'valid-feedback'>
@@ -47,28 +90,6 @@
             </div>
             <button class = 'btn btn-success'>Submit</button>
         </form>
-
-        <!--DISPLAYING REVIEWS-->
-    
-            <% for(let review of park.reviews ){%>
-                <div class = 'card my-3'>
-                    <div class = 'card-body'>
-                        <h6 class = 'card-title mb-2'><%= review.author.username %></h6>
-                        <p class="starability-result" data-rating="<%= review.rating %>">
-                            Rated: <%= review.rating %> Stars 
-                        </p>
-                        <p class = 'card-text'><%= review.body %></p>
-
-                        <!--HIDING DELETE BUTTON IF YOU'RE NOT THE OWNER OF REVIEW-->
-                        <% if(currentUser && review.author.equals(currentUser._id)){ %> 
-                        <form action = '/parks/<%= park._id %>/reviews/<%= review._id %>?_method=DELETE' method = 'POST'>
-                            <button class = 'btn btn-sm btn-danger'>Delete</button>
-                        </form>    
-                        <% } %> 
-
-                    </div>    
-                </div>
-            <% } %>  
     </div>    
 </div>    
 
