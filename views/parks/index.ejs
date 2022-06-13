@@ -3,25 +3,31 @@
 <!--ADDING 'seachbar.css' TO INDEX ROUTE ONLY-->
 <link rel = 'stylesheet' href = '/styles/searchbar.css'>
 
-<body class = 'vh-100'>
+<body class = 'd-flex flex-column vh-100'>
 
     <%- include('../partials/navbar.ejs') -%> 
 
-    <div id = 'cluster-map' style = 'width: 100%; height: 60vh;'>
+    <div id = 'cluster-map' class = 'col-12' style = 'width: 100%; height: 60vh;'>
     </div>
 
-    <div class = 'container mt-5 mb-3'>
+    <div class = 'container mt-5 mb-3 col-12'>
         <!--FLASH-->    
         <%- include('../partials/flash.ejs') %> 
 
+        
         <div class = 'search-bar'>
             <input id = 'search-box' type = 'text' placeholder = 'Search for a Park' onkeyup= 'sendData(this)' >
             <button type = 'submit'><img class = 'img-fluid' src="/images/search.png" alt=""></button>
         </div>
+    
 
-        <div id = 'search-results'></div>
+        <div id = 'search-results'>
+        </div>
 
-    </div>    
+    </div> 
+    
+    <%- include('../partials/footer.ejs') -%> 
+
 
 
     <!--BOOTSTRAP SCRIPT-->
