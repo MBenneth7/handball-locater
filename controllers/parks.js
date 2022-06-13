@@ -16,10 +16,10 @@ module.exports.showPark = async(req,res)=>{
 
     //'populate' USED TO SHOW 'reviews' ASSOCIATED W/ PARK
     const park = await Park.findById(id).populate({
-        path:'reviews',
+        path:'reviews comments',
         populate: {
             path: 'author'
-        }
+        },
     });
 
     //REDIRECT IF PARK NOT FOUND

@@ -29,6 +29,13 @@ const ParkSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Review'
          }
+    ],
+    comments: [
+        {
+            //LINKING OUR COMMENTS TO OUR PARKS
+            type: Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
     ]
 }, opts);
 

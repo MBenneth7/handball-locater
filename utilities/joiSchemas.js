@@ -7,4 +7,12 @@ module.exports.reviewSchema = Joi.object({
         rating: Joi.number().required(),
         body: Joi.string().required()
     }).required()
-})
+});
+
+//REQUIRING THE DATA FOR COMMENTS ON THE SERVER SIDE
+
+module.exports.commentSchema = Joi.object({
+    comment: Joi.object({
+        body: Joi.string().required(),
+    }).required()
+});

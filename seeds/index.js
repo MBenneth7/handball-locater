@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Park = require('../models/park');
+const Comment = require('../models/comment');
+const Review = require('../models/review');
 //SMALLER DATAS SET
 //const parks = require ('../seeds/smallerParks');
 //LARGER DATASET
@@ -53,6 +55,9 @@ function caseString(str){
 const seedDB = async()=>{
     //DELETING OUR DB EVERYTIME WE RE-SEED OUR DATABASE
     await Park.deleteMany({});
+    await Comment.deleteMany({});
+    await Review.deleteMany({});
+
 
     for(let i = 0; i < parks.length; i++){
         const park = new Park({

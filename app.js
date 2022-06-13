@@ -17,7 +17,11 @@ const LocalStrategy = require('passport-local');
 
 const User = require('./models/user');
 const Park = require('./models/park');
+const Comment = require('./models/comment');
 const ExpressError = require('./utilities/ExpressError');
+const catchAsync = require('./utilities/catchAsync'); 
+//EXTERNAL MIDDLEWARE FROM 'middleware.js'
+const{validateComment, isLoggedIn, isCommentAuthor} = require('./utilities/middleware');
 
 //ROUTES
 const parkRoutes = require('./routes/parks');
@@ -116,15 +120,46 @@ app.get('/',(req,res)=>{
     res.render('home');
 });
 
+//POST REQUEST FOR COMMENTS
+app.post('/parks/:id/comments',validateComment, isLoggedIn, catchAsync(async(req,res)=>{
+    const {id} = req.params;
+    const park = await Park.findById(id);
+    const comment = new Comment(req.body.comment);
+
+    //ADDING THE 'req.user_id' TO THE AUTHOR FIELD OF OUR COMMENT DATA, ADDING A AUTHOR TO A COMMENT
+    comment.author = req.user._id;
+
+    
+    //ADDING A 'comment'  TO A SPECEFIC PARK
+    park.comments.push(comment);
+
+    await comment.save();
+    await park.save();
+
+    req.flash('success', 'Comment successfully made!!!');
+    res.redirect(`/parks/${park._id}`);
+}));
+
+//DELETE COMMENTS
+app.delete('/parks/:id/comments/:commentId', isLoggedIn, isCommentAuthor, catchAsync(async(req,res)=>{
+    const {id, commentId} = req.params;
+
+    await Park.findByIdAndUpdate( id, { $pull: { comments: commentId } });
+    await Comment.findByIdAndDelete(commentId);
+
+    req.flash('success', 'Deleted Comment!!!');
+    res.redirect(`/parks/${id}`);
+}));
+
 //POST REQUEST FOR SEARCH RESULTS
-app.post('/', async(req,res) =>{
+app.post('/', catchAsync(async(req,res) =>{
     let payload = req.body.payload.trim();
     //SEARCH FOR PARK AND THE REGEX EXPRESSION HANDLES CASE SENSITIVITY
     let search = await Park.find( { name: { $regex: new RegExp('^' + payload + '.*', 'i') } } ).exec();
     //LIMIT SEARCH RESULTS
     search = search.slice(0,10);
     res.send({payload: search});
-});
+}));
 
 //MIDDLEWARE ROUTE HANDLER FOR ROUTES NOT FOUND
 app.all('*',(req,res,next)=>{

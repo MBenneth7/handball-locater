@@ -16,10 +16,36 @@
                 <p class = 'card-text'> <%= park.description %> </p>
             </div>
         </div>
-
+        <!--POSTING A COMMENT-->
         <div>
-            <div>Conversation</div>
+            <form action = '/parks/<%= park._id%>/comments' method = 'POST'>
+                <div class = 'my-2'>
+                    <label class = 'form-label' for='body'><h4>Join the Conversation</h4></label>
+                    <textarea class = 'form-control' name = 'comment[body]' id = 'body' cols = '30' row = '10' required></textarea>
+                    <div class = 'valid-feedback'>
+                        Looks good!
+                    </div>
+                </div>
+                <button class = 'btn btn-success mt-2'>Comment</button>
+            </form>       
         </div>
+        <!--DISPLAYING A COMMENT-->
+        <div>
+            <%for(let comment of park.comments){ %> 
+                <div class = 'card my-2'>
+                    <div class="card-body">
+                        <h6 class = 'card-title mb-2'><%= comment.author.username %></h6>
+                        <p class = 'card-text'><%= comment.body %></p>
+                    </div>
+                    <div class = 'p-2 d-flex justify-content-end'>    
+                        <form action = '/parks/<%= park._id %>/comments/<%= comment._id %>?_method=DELETE' method = 'POST'>
+                            <button class = 'btn btn-sm btn-danger'>Delete</button>
+                        </form>  
+                    </div>  
+                </div>
+            <%}%>    
+            <!--HIDING DELETE BUTTON IF YOU'RE NOT THE OWNER OF REVIEW-->
+        </div>    
     </div>
 
     <div class = 'col-5'>
@@ -29,28 +55,28 @@
         <div class = "<%= park.reviews.length === 0 ? 'display:none':'my-3 card'%>">
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                <%for(let i = 0; i < park.reviews.length; i++){ %>     
-                    <div class="<%= i === 0 ? 'carousel-item active':'carousel-item'%>">
-                        <div class = 'container'>
-                                <div class = 'my-1 p-2'>
-                                    <div class = 'd-flex flex-column align-items-center'>
-                                        <h6 class = 'card-title mb-2'><%= park.reviews[i].author.username %></h6>
-                                        <p class="starability-result" data-rating="<%= park.reviews[i].rating %>">
-                                            Rated: <%= park.reviews[i].rating %> Stars 
-                                        </p>
-                                        <p class = 'card-text'><%= park.reviews[i].body %></p>
-                        
-                                        <!--HIDING DELETE BUTTON IF YOU'RE NOT THE OWNER OF REVIEW-->
-                                        <% if(currentUser && park.reviews[i].author.equals(currentUser._id)){ %> 
-                                        <form action = '/parks/<%= park._id %>/reviews/<%= park.reviews[i]._id %>?_method=DELETE' method = 'POST'>
-                                            <button class = 'btn btn-sm btn-danger'>Delete</button>
-                                        </form>    
-                                        <% } %>     
-                                    </div>    
-                                </div>
+                    <%for(let i = 0; i < park.reviews.length; i++){ %>     
+                        <div class="<%= i === 0 ? 'carousel-item active':'carousel-item'%>">
+                            <div class = 'container'>
+                                    <div class = 'my-1 p-2'>
+                                        <div class = 'd-flex flex-column align-items-center'>
+                                            <h6 class = 'card-title mb-2'><%= park.reviews[i].author.username %></h6>
+                                            <p class="starability-result" data-rating="<%= park.reviews[i].rating %>">
+                                                Rated: <%= park.reviews[i].rating %> Stars 
+                                            </p>
+                                            <p class = 'card-text'><%= park.reviews[i].body %></p>
+                            
+                                            <!--HIDING DELETE BUTTON IF YOU'RE NOT THE OWNER OF REVIEW-->
+                                            <% if(currentUser && park.reviews[i].author.equals(currentUser._id)){ %> 
+                                            <form action = '/parks/<%= park._id %>/reviews/<%= park.reviews[i]._id %>?_method=DELETE' method = 'POST'>
+                                                <button class = 'btn btn-sm btn-danger'>Delete</button>
+                                            </form>    
+                                            <% } %>     
+                                        </div>    
+                                    </div>
+                            </div>
                         </div>
-                    </div>
-                <% } %> 
+                    <% } %> 
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -62,6 +88,8 @@
                 </button>
             </div>
         </div>
+
+        <!--CREATING A REVIEW-->
 
         <h2>Leave a Review</h2>
         <form action = '/parks/<%= park._id %>/reviews' method = 'POST' class = 'validated-form' novalidate>
@@ -90,7 +118,7 @@
             </div>
             <button class = 'btn btn-success'>Submit</button>
         </form>
-    </div>    
+    </div>   
 </div>    
 
 <div>
