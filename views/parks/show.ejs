@@ -37,11 +37,13 @@
                         <h6 class = 'card-title mb-2'><%= comment.author.username %></h6>
                         <p class = 'card-text'><%= comment.body %></p>
                     </div>
+                    <% if(currentUser && comment.author.equals(currentUser._id)){ %>
                     <div class = 'p-2 d-flex justify-content-end'>    
                         <form action = '/parks/<%= park._id %>/comments/<%= comment._id %>?_method=DELETE' method = 'POST'>
                             <button class = 'btn btn-sm btn-danger'>Delete</button>
                         </form>  
-                    </div>  
+                    </div>
+                    <% } %>     
                 </div>
             <%}%>    
             <!--HIDING DELETE BUTTON IF YOU'RE NOT THE OWNER OF REVIEW-->
