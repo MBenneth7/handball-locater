@@ -12,8 +12,11 @@ const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+//IMAGE UPLOAD
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const {storage} = require('./cloudinary/index');
+const upload = multer({ storage });
+
 
 const User = require('./models/user');
 const Park = require('./models/park');
