@@ -7,18 +7,21 @@
 <h5 class = 'pb-3'><%= park.location %> </h5>
 <div class = 'row'>
     <div class = 'col-7'>
-        <div>
-            <img class="d-block w-100" src = '<%= park.image %>'>
-        </div>
         <div class = 'card'>
+            <div>
+                <img class="d-block w-100" src = '<%= park.image %>'>
+                <div class = 'p-2 d-flex justify-content-between'>
+                    <h4 class = 'card-title ps-2 align-self-end'> Number of Courts: <%= park.courts %></h4> 
+                    <a href = '/parks/<%= park._id %>/addImages'><button class = 'btn btn-primary'>Add an Image</button></a>
+                </div>
+            </div>
             <div class = 'card-body'>
-                <h4 class = 'card-title pb-3'> Number of Courts: <%= park.courts %></h4> 
                 <p class = 'card-text'> <%= park.description %> </p>
             </div>
         </div>
         <!--POSTING A COMMENT-->
         <div>
-            <form action = '/parks/<%= park._id%>/comments' method = 'POST'>
+            <form action = '/parks/<%= park._id%>/comments' method = 'POST' class = 'validated-form' novalidate>
                 <div class = 'my-2'>
                     <label class = 'form-label' for='body'><h4>Join the Conversation</h4></label>
                     <textarea class = 'form-control' name = 'comment[body]' id = 'body' cols = '30' row = '10' required></textarea>

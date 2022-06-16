@@ -2,8 +2,6 @@ if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config();
 }
 
-//console.log(process.env.MAPBOX_TOKEN)
-
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -14,12 +12,15 @@ const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const User = require('./models/user');
 const Park = require('./models/park');
 const Comment = require('./models/comment');
 const ExpressError = require('./utilities/ExpressError');
 const catchAsync = require('./utilities/catchAsync'); 
+
 //EXTERNAL MIDDLEWARE FROM 'middleware.js'
 const{validateComment, isLoggedIn, isCommentAuthor} = require('./utilities/middleware');
 
@@ -27,6 +28,7 @@ const{validateComment, isLoggedIn, isCommentAuthor} = require('./utilities/middl
 const parkRoutes = require('./routes/parks');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
+const { findById } = require('./models/user');
 
 
 //USING MONGO DB
@@ -120,8 +122,23 @@ app.get('/',(req,res)=>{
     res.render('home');
 });
 
+//ADD IMAGES
+app.get('/parks/:id/addImages', catchAsync(async(req,res)=>{
+    const {id} = req.params;
+    const park = await Park.findById(id);
+    res.render('parks/addImages', {park});
+}));
+
+//upload.single('image')
+
+//POST IMAGES
+app.post('/parks/:id',upload.array('image'),catchAsync(async(req,res)=>{
+    console.log(req.body, req.files);
+    res.send('IT WORKED!!!');
+}));
+
 //POST REQUEST FOR COMMENTS
-app.post('/parks/:id/comments',validateComment, isLoggedIn, catchAsync(async(req,res)=>{
+app.post('/parks/:id/comments', validateComment, isLoggedIn, catchAsync(async(req,res)=>{
     const {id} = req.params;
     const park = await Park.findById(id);
     const comment = new Comment(req.body.comment);

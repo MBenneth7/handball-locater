@@ -49,4 +49,5 @@ p{
     width: 60px;
     height: 60px;
     background: rgb(13, 110, 253);
+    cursor: pointer;
 }
