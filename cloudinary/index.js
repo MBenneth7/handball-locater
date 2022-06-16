@@ -11,8 +11,10 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary,
-    folder: 'Handball-Locator',
-    allowedFormats: ['jpeg', 'png', 'jpg']
+    params: {
+        folder: 'Handball-Locator',
+        allowedFormats: ['jpeg', 'png', 'jpg']
+    }
 });
 
 module.exports = {
