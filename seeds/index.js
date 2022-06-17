@@ -74,8 +74,8 @@ const seedDB = async()=>{
             description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita quo saepe vitae nemo neque? Eius in natus incidunt adipisci corporis, atque odio culpa dicta earum iusto exercitationem sunt quia possimus? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magni nesciunt repellendus deleniti, molestias error beatae doloremque id. Eum recusandae, in quasi ab laudantium amet. Tenetur maxime non provident ab blanditiis? Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt deleniti ratione nobis. Ipsum assumenda suscipit neque ullam facilis dignissimos est perspiciatis velit voluptate quam possimus, similique deleniti odio fugit alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit ratione necessitatibus, rerum nostrum sint asperiores ullam dolorem velit cum doloribus dolorum! Ut, tenetur quisquam enim maiores quod ipsa magnam illo!',
             images:[
                 {
-                    url: 'https://res.cloudinary.com/dyyp1kotd/image/upload/v1655489014/Handball-Locator/yx6s3vvj90hhsipy0sqc.jpg',
-                    filename: 'Handball-Locator/yx6s3vvj90hhsipy0sqc'
+                    url: 'https://res.cloudinary.com/dyyp1kotd/image/upload/v1655493391/Handball-Locator/hl7pfbfg8svwockoaiek.jpg',
+                    filename: 'Handball-Locator/hl7pfbfg8svwockoaiek'
                 }
             ]
         });

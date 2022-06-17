@@ -1,5 +1,8 @@
 const Park = require('../models/park');
 
+//CLOUDINARY FOR IMAGES
+const {cloudinary} = require('../cloudinary');
+
 
 //MAPBOX FOR GEOCODING
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
@@ -44,10 +47,24 @@ module.exports.addImages = async(req,res)=>{
     const park = await Park.findByIdAndUpdate(id, {...req.body.park});
     const imgs = req.files.map(f=>({url: f.path, filename: f.filename}));
     park.images.push(...imgs);
-    console.log(park);
+
     await park.save();
 
-    req.flash('sucess', 'Succesfully add images!!!');
+    //DELETING IMAGES
+
+    if(req.body.deleteImages){
+        //DELETING IMAGES ON CLOUDINARY SIDE
+        for(let filename of req.body.deleteImages){
+            await cloudinary.uploader.destroy(filename);
+        }
+        await park.updateOne({ $pull: {images:{ filename: { $in: req.body.deleteImages } } } });
+        //console.log(park);
+    }
+
+    //console.log(req.body);
+
+
+    req.flash('success', 'Succesfully edited images!!!');
     res.redirect(`/parks/${park._id}`);
 }
 

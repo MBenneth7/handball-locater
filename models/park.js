@@ -6,17 +6,23 @@ const Schema = mongoose.Schema;
 //FOR VIRTUALS TO BE ADDED TO DATA
 const opts = {toJSON:{virtuals: true}};
 
+const ImageSchema = new Schema({
+    url: String,
+    filename: String
+});
+
+//FOR THUMBNAIL VIEW ON EDIT IMAGES FORM
+
+ImageSchema.virtual('thumbnail').get(function(){
+    return this.url.replace('/upload', '/upload/w_200');
+});
+
 const ParkSchema = new Schema({
     name: String,
     location: String,
     courts: Number,
     description: String,
-    images: [
-        {
-            url: String,
-            filename: String
-        }
-    ],
+    images: [ImageSchema],
     geometry:{
         type:{
             type: String,
