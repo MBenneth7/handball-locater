@@ -11,7 +11,12 @@ const ParkSchema = new Schema({
     location: String,
     courts: Number,
     description: String,
-    image: String,
+    images: [
+        {
+            url: String,
+            filename: String
+        }
+    ],
     geometry:{
         type:{
             type: String,

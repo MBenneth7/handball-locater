@@ -72,7 +72,12 @@ const seedDB = async()=>{
             },
             courts: parks[i].Num_of_Courts,
             description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita quo saepe vitae nemo neque? Eius in natus incidunt adipisci corporis, atque odio culpa dicta earum iusto exercitationem sunt quia possimus? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magni nesciunt repellendus deleniti, molestias error beatae doloremque id. Eum recusandae, in quasi ab laudantium amet. Tenetur maxime non provident ab blanditiis? Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt deleniti ratione nobis. Ipsum assumenda suscipit neque ullam facilis dignissimos est perspiciatis velit voluptate quam possimus, similique deleniti odio fugit alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit ratione necessitatibus, rerum nostrum sint asperiores ullam dolorem velit cum doloribus dolorum! Ut, tenetur quisquam enim maiores quod ipsa magnam illo!',
-            image: 'https://i.pinimg.com/originals/ce/71/0f/ce710fb3cfbbaf16eed7806efcf55c27.jpg'
+            images:[
+                {
+                    url: 'https://res.cloudinary.com/dyyp1kotd/image/upload/v1655489014/Handball-Locator/yx6s3vvj90hhsipy0sqc.jpg',
+                    filename: 'Handball-Locator/yx6s3vvj90hhsipy0sqc'
+                }
+            ]
         });
         await park.save();
     }

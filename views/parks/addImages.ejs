@@ -1,6 +1,11 @@
 <% layout('layouts/boilerplate.ejs') %> 
 
 <form action = '/parks/<%= park._id  %>' method = 'POST' enctype = 'multipart/form-data' class = 'validated-form' novalidate>
-    <input type = 'file' name = 'image' multiple>
-    <button class = 'btn btn-success'>Add Image(s)</button>
+    <div class = 'p-2'>
+        <input type = 'file' name = 'image' multiple>
+    </div>
+    <div class = 'p-2'>
+        <button class = 'btn btn-success'>Add Image(s)</button>
+    </div>
 </form>
+

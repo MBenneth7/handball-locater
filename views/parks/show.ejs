@@ -7,13 +7,31 @@
 <h5 class = 'pb-3'><%= park.location %> </h5>
 <div class = 'row'>
     <div class = 'col-7'>
-        <div class = 'card'>
-            <div>
-                <img class="d-block w-100" src = '<%= park.image %>'>
-                <div class = 'p-2 d-flex justify-content-between'>
-                    <h4 class = 'card-title ps-2 align-self-end'> Number of Courts: <%= park.courts %></h4> 
-                    <a href = '/parks/<%= park._id %>/addImages'><button class = 'btn btn-primary'>Add an Image</button></a>
+        <div class='card'>
+              <div id="carousel-one" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <% park.images.forEach((image, i) => { %> 
+                        <div class="carousel-item <%= i === 0 ? 'active' : ''%>">
+                            <img class="d-block w-100" style = 'height: 425px;' src = '<%= image.url %>'>
+                        </div>
+                    <% }) %> 
                 </div>
+                <% if( park.images.length > 1 ){ %> 
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-one" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel-one" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                <% } %> 
+            </div>
+            <div class = 'p-2 d-flex justify-content-between'>
+                <h4 class = 'card-title ps-2 align-self-end'> Number of Courts: <%= park.courts %></h4> 
+                <% if(currentUser){ %> 
+                <a href = '/parks/<%= park._id %>/addImages'><button class = 'btn btn-primary'>Add an Image</button></a>
+                <% } %> 
             </div>
             <div class = 'card-body'>
                 <p class = 'card-text'> <%= park.description %> </p>
@@ -31,26 +49,7 @@
                 </div>
                 <button class = 'btn btn-success mt-2'>Comment</button>
             </form>       
-        </div>
-        <!--DISPLAYING A COMMENT-->
-        <div>
-            <%for(let comment of park.comments){ %> 
-                <div class = 'card my-2'>
-                    <div class="card-body">
-                        <h6 class = 'card-title mb-2'><%= comment.author.username %></h6>
-                        <p class = 'card-text'><%= comment.body %></p>
-                    </div>
-                    <% if(currentUser && comment.author.equals(currentUser._id)){ %>
-                    <div class = 'p-2 d-flex justify-content-end'>    
-                        <form action = '/parks/<%= park._id %>/comments/<%= comment._id %>?_method=DELETE' method = 'POST'>
-                            <button class = 'btn btn-sm btn-danger'>Delete</button>
-                        </form>  
-                    </div>
-                    <% } %>     
-                </div>
-            <%}%>    
-            <!--HIDING DELETE BUTTON IF YOU'RE NOT THE OWNER OF REVIEW-->
-        </div>    
+        </div>  
     </div>
 
     <div class = 'col-5'>
@@ -124,10 +123,30 @@
             <button class = 'btn btn-success'>Submit</button>
         </form>
     </div>   
-</div>    
+</div> 
+
+<!--DISPLAYING A COMMENT-->
+<div>
+    <%for(let comment of park.comments){ %> 
+        <div class = 'card my-2'>
+            <div class="card-body">
+                <h6 class = 'card-title mb-2'><%= comment.author.username %></h6>
+                <p class = 'card-text'><%= comment.body %></p>
+            </div>
+            <% if(currentUser && comment.author.equals(currentUser._id)){ %>
+            <div class = 'p-2 d-flex justify-content-end'>    
+                <form action = '/parks/<%= park._id %>/comments/<%= comment._id %>?_method=DELETE' method = 'POST'>
+                    <button class = 'btn btn-sm btn-danger'>Delete</button>
+                </form>  
+            </div>
+            <% } %>     
+        </div>
+    <%}%>    
+    <!--HIDING DELETE BUTTON IF YOU'RE NOT THE OWNER OF REVIEW-->
+</div>  
 
 <div>
-    <a href="/parks">Back to All Parks</a>
+    <a href="/parks/search">Back to Search</a>
 </div>
 
 <script>

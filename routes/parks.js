@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
+//IMAGE UPLOAD
+const multer = require('multer');
+const {storage} = require('../cloudinary/index');
+const upload = multer({ storage });
+
 //CONTROLLER FROM 'parks.js' IN CONTROLLER DIRECTORY
 const parks = require('../controllers/parks');
 
@@ -11,6 +16,9 @@ const catchAsync = require('../utilities/catchAsync');
 const {isLoggedIn} = require('../utilities/middleware');
 const { path } = require('express/lib/application');
 
+
+//ROUTES
+
 router.route('/')
     //RENDER THE INDEX OF PARKS
     .get(catchAsync(parks.index));
@@ -20,6 +28,12 @@ router.route('/search')
 
 router.route('/:id')
     //RENDER THE INDIVIDUAL PARK PROFILE PAGE
-    .get(catchAsync(parks.showPark));    
+    .get(catchAsync(parks.showPark))
+    //POSTING NEW IMAGES
+    .post(upload.array('image'),catchAsync(parks.addImages));
+
+router.route('/:id/addImages')
+    //RENDER 'addImages' FORM
+    .get(isLoggedIn, catchAsync(parks.addImagesForm))       
 
 module.exports = router;    

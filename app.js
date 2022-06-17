@@ -31,7 +31,7 @@ const{validateComment, isLoggedIn, isCommentAuthor} = require('./utilities/middl
 const parkRoutes = require('./routes/parks');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
-const { findById } = require('./models/user');
+
 
 
 //USING MONGO DB
@@ -126,19 +126,19 @@ app.get('/',(req,res)=>{
 });
 
 //ADD IMAGES
-app.get('/parks/:id/addImages', catchAsync(async(req,res)=>{
-    const {id} = req.params;
-    const park = await Park.findById(id);
-    res.render('parks/addImages', {park});
-}));
+// app.get('/parks/:id/addImages', catchAsync(async(req,res)=>{
+//     const {id} = req.params;
+//     const park = await Park.findById(id);
+//     res.render('parks/addImages', {park});
+// }));
 
 //upload.single('image')
 
 //POST IMAGES
-app.post('/parks/:id',upload.array('image'),catchAsync(async(req,res)=>{
-    console.log(req.body, req.files);
-    res.send('IT WORKED!!!');
-}));
+// app.post('/parks/:id',upload.array('image'),catchAsync(async(req,res)=>{
+//     console.log(req.body, req.files);
+//     res.send('IT WORKED!!!');
+// }));
 
 //POST REQUEST FOR COMMENTS
 app.post('/parks/:id/comments', validateComment, isLoggedIn, catchAsync(async(req,res)=>{
