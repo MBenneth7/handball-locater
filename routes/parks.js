@@ -6,10 +6,10 @@ const multer = require('multer');
 const {storage} = require('../cloudinary/index');
 const upload = multer({ storage });
 
-//CONTROLLER FROM 'parks.js' IN CONTROLLER DIRECTORY
+//CONTROLLER & MODEL FROM 'parks.js' IN CONTROLLER & MODELS DIRECTORY
 const parks = require('../controllers/parks');
-
 const Park = require('../models/park');
+
 const catchAsync = require('../utilities/catchAsync'); 
 
 //EXTERNAL MIDDLEWARE FROM 'middleware.js'

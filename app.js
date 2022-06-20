@@ -17,10 +17,9 @@ const multer = require('multer');
 const {storage} = require('./cloudinary/index');
 const upload = multer({ storage });
 
-
+//OTHER FILES
 const User = require('./models/user');
 const Park = require('./models/park');
-const Comment = require('./models/comment');
 const ExpressError = require('./utilities/ExpressError');
 const catchAsync = require('./utilities/catchAsync'); 
 
@@ -31,6 +30,7 @@ const{validateComment, isLoggedIn, isCommentAuthor} = require('./utilities/middl
 const parkRoutes = require('./routes/parks');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
+const commentRoutes = require('./routes/comments');
 
 
 
@@ -118,58 +118,12 @@ app.use((req,res,next)=>{
 app.use('/parks', parkRoutes);
 app.use('/parks/:id/reviews', reviewRoutes);
 app.use('/', userRoutes);
-
+app.use('/parks/:id/comments', commentRoutes);
 
 //HOMEPAGE
 app.get('/',(req,res)=>{
     res.render('home');
 });
-
-//ADD IMAGES
-// app.get('/parks/:id/addImages', catchAsync(async(req,res)=>{
-//     const {id} = req.params;
-//     const park = await Park.findById(id);
-//     res.render('parks/addImages', {park});
-// }));
-
-//upload.single('image')
-
-//POST IMAGES
-// app.post('/parks/:id',upload.array('image'),catchAsync(async(req,res)=>{
-//     console.log(req.body, req.files);
-//     res.send('IT WORKED!!!');
-// }));
-
-//POST REQUEST FOR COMMENTS
-app.post('/parks/:id/comments', validateComment, isLoggedIn, catchAsync(async(req,res)=>{
-    const {id} = req.params;
-    const park = await Park.findById(id);
-    const comment = new Comment(req.body.comment);
-
-    //ADDING THE 'req.user_id' TO THE AUTHOR FIELD OF OUR COMMENT DATA, ADDING A AUTHOR TO A COMMENT
-    comment.author = req.user._id;
-
-    
-    //ADDING A 'comment'  TO A SPECEFIC PARK
-    park.comments.push(comment);
-
-    await comment.save();
-    await park.save();
-
-    req.flash('success', 'Comment successfully made!!!');
-    res.redirect(`/parks/${park._id}`);
-}));
-
-//DELETE COMMENTS
-app.delete('/parks/:id/comments/:commentId', isLoggedIn, isCommentAuthor, catchAsync(async(req,res)=>{
-    const {id, commentId} = req.params;
-
-    await Park.findByIdAndUpdate( id, { $pull: { comments: commentId } });
-    await Comment.findByIdAndDelete(commentId);
-
-    req.flash('success', 'Deleted Comment!!!');
-    res.redirect(`/parks/${id}`);
-}));
 
 //POST REQUEST FOR SEARCH RESULTS
 app.post('/', catchAsync(async(req,res) =>{
