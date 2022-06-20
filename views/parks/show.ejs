@@ -128,7 +128,7 @@
 <!--DISPLAYING A COMMENT-->
 <div>
     <%for(let comment of park.comments){ %> 
-        <div class = 'card my-2'>
+        <div class = 'card my-3'>
             <div class="card-body">
                 <h6 class = 'card-title mb-2'><%= comment.author.username %></h6>
                 <p class = 'card-text'><%= comment.body %></p>
@@ -145,7 +145,7 @@
     <!--HIDING DELETE BUTTON IF YOU'RE NOT THE OWNER OF REVIEW-->
 </div>  
 
-<div>
+<div class = 'mt-3'>
     <a href="/parks/search">Back to Search</a>
 </div>
 

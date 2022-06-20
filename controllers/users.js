@@ -23,7 +23,7 @@ module.exports.register = async(req,res,next)=>{
 
             console.log(registeredUser);
             req.flash('success',`Welcome to Handball Locator ${user.username}!!!`);
-            res.redirect('/parks');
+            res.redirect('/parks/search');
         });
     }catch(e){
         req.flash('error', e.message)
@@ -60,6 +60,6 @@ module.exports.logout = (req,res)=>{
         delete req.session.returnTo;
         
         req.flash('success', 'Successfully logged out!!!');
-        res.redirect('/parks/search');
+        res.redirect('/');
     });
 }
