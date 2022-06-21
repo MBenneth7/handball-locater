@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose');
 const Park = require('../models/park');
 const Comment = require('../models/comment');
@@ -7,11 +9,12 @@ const Review = require('../models/review');
 //LARGER DATASET
 const parks = require('../seeds/parks');
 
+
 //USING MONGO DB
 main().catch(err => console.log(err, 'OH NO MONGO ERROR!!!'));
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/handball');
+  await mongoose.connect('mongodb+srv://admin:0QCbUz6f41Myk7LA@hb-locator-cluster.ymz03hg.mongodb.net/?retryWrites=true&w=majority');
   console.log('Connected to HandBall DB')
 }
 
@@ -74,8 +77,8 @@ const seedDB = async()=>{
             description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita quo saepe vitae nemo neque? Eius in natus incidunt adipisci corporis, atque odio culpa dicta earum iusto exercitationem sunt quia possimus? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magni nesciunt repellendus deleniti, molestias error beatae doloremque id. Eum recusandae, in quasi ab laudantium amet. Tenetur maxime non provident ab blanditiis? Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt deleniti ratione nobis. Ipsum assumenda suscipit neque ullam facilis dignissimos est perspiciatis velit voluptate quam possimus, similique deleniti odio fugit alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit ratione necessitatibus, rerum nostrum sint asperiores ullam dolorem velit cum doloribus dolorum! Ut, tenetur quisquam enim maiores quod ipsa magnam illo!',
             images:[
                 {
-                    url: 'https://res.cloudinary.com/dyyp1kotd/image/upload/v1655493391/Handball-Locator/hl7pfbfg8svwockoaiek.jpg',
-                    filename: 'Handball-Locator/hl7pfbfg8svwockoaiek'
+                    url: 'https://res.cloudinary.com/dyyp1kotd/image/upload/v1655840363/Handball-Locator/handball_bifvsq.jpg',
+                    filename: 'Handball-Locator/handball_bifvsq'
                 }
             ]
         });
