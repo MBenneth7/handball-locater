@@ -9,12 +9,15 @@ const Review = require('../models/review');
 //LARGER DATASET
 const parks = require('../seeds/parks');
 
+//DB URL, USE MONGO ATLAS KEY TO CONNECT TO ATLAS DB
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/handball';
+
 
 //USING MONGO DB
 main().catch(err => console.log(err, 'OH NO MONGO ERROR!!!'));
 
 async function main() {
-  await mongoose.connect('mongodb+srv://admin:0QCbUz6f41Myk7LA@hb-locator-cluster.ymz03hg.mongodb.net/?retryWrites=true&w=majority');
+  await mongoose.connect(dbUrl);
   console.log('Connected to HandBall DB')
 }
 
