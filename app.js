@@ -46,7 +46,7 @@ const commentRoutes = require('./routes/comments');
 //LOCAL DB
 //'mongodb://localhost:27017/handball'
 
-const dbUrl = 'mongodb://localhost:27017/handball';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/handball';
 
 
 
@@ -96,12 +96,15 @@ app.set('views', path.join(__dirname, 'views'));
 //////////////////////////////////////////////////////
 //////////////** EXPRESS SESSION & COOKIES **//////////////////
 
+//SECRET
+const secret = process.env.SECRET || 'thisisnotagoodsecret';
+
 //MONGO STORE
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'thisisnotagoodsecret'
+        secret
     }
 });
 //CHECKING FOR MONGO STORE ERROR
@@ -112,7 +115,7 @@ store.on('error', function(e){
 const sessionConfig = {
     store,
     name: 'session', 
-    secret: 'thisisnotagoodsecret',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
