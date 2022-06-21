@@ -12,10 +12,15 @@ const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+
 //IMAGE UPLOAD
 const multer = require('multer');
 const {storage} = require('./cloudinary/index');
 const upload = multer({ storage });
+
+//SECURITIES
+const mongoSanitize = require('express-mongo-sanitize');
+
 
 //OTHER FILES
 const User = require('./models/user');
@@ -52,6 +57,16 @@ app.use(express.static(path.join(__dirname,'public')));
 ////////// **PARSING 'post' REQUESTS **//////////////
 app.use(express.urlencoded({extended: true}));
 /////////////////////////////////////////////////////
+
+/////////////////*** SECURITIES ***///////////////////
+
+//MONGO-SANITIZE
+app.use(mongoSanitize({
+    replaceWith:'_'
+}));
+
+
+//////////////////////////////////////////////////////
 
 ////METHOD OVERRIDE, USE TO DO OTHER REQUESTS BESIDES 'get' AND 'post'////
 //USE: npm i method-override
@@ -101,7 +116,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
 
-    console.log(req.session);
+    console.log(req.query);
 
     //GRANTING ALL ROUTES TO 'user' PROVIDED BY PASSPORT 'req.user'
     res.locals.currentUser = req.user;
