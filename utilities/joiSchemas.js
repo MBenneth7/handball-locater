@@ -23,7 +23,9 @@ const extension = (joi) =>({
     }
 });
 
-const Joi = BaseJoi.extend(extension);
+//ADDING EXTENSION ON TOP OF 'joi'
+
+const Joi = BaseJoi.extend(extension); 
 
 //REQUIRING THE DATA FOR REVIEWS ON THE SERVER SIDE
 

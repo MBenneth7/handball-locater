@@ -2,6 +2,7 @@ if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config();
 }
 
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -13,6 +14,9 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
+//MONGO STORE
+const MongoStore = require('connect-mongo');
+
 //IMAGE UPLOAD
 const multer = require('multer');
 const {storage} = require('./cloudinary/index');
@@ -20,7 +24,6 @@ const upload = multer({ storage });
 
 //SECURITIES
 const mongoSanitize = require('express-mongo-sanitize');
-
 
 //OTHER FILES
 const User = require('./models/user');
@@ -37,13 +40,22 @@ const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 const commentRoutes = require('./routes/comments');
 
+//MONGO ATLAS
+//process.env.DB_URL;
+
+//LOCAL DB
+//'mongodb://localhost:27017/handball'
+
+const dbUrl = 'mongodb://localhost:27017/handball';
+
+
 
 
 //USING MONGO DB
 main().catch(err => console.log(err, 'OH NO MONGO ERROR!!!'));
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/handball');
+  await mongoose.connect(dbUrl);
   console.log('Connected to HandBall DB')
 }
 
@@ -84,12 +96,28 @@ app.set('views', path.join(__dirname, 'views'));
 //////////////////////////////////////////////////////
 //////////////** EXPRESS SESSION & COOKIES **//////////////////
 
+//MONGO STORE
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'thisisnotagoodsecret'
+    }
+});
+//CHECKING FOR MONGO STORE ERROR
+store.on('error', function(e){
+    console.log('Session Store Error', e);
+});
+
 const sessionConfig = {
+    store,
+    name: 'session', 
     secret: 'thisisnotagoodsecret',
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        //secure: true, // FOR 'https://'
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //EXPIRATION FOR COOKIE
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
@@ -116,7 +144,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
 
-    console.log(req.query);
+    //console.log(req.query);
 
     //GRANTING ALL ROUTES TO 'user' PROVIDED BY PASSPORT 'req.user'
     res.locals.currentUser = req.user;
