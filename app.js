@@ -200,8 +200,13 @@ app.use((err,req,res,next)=>{
 ////////////////////////////////////////////////////
 
 //LISTENER
-app.listen(3000,()=>{
-    console.log('Listening on Route 3000!!!');
+
+//PORT FOR HEROKU
+//'PORT' WILL BE ADDED BY HEROKU
+const port = process.env.PORT || 3000;
+
+app.listen(port,()=>{
+    console.log(`Listening on port ${port}!!!`);
 });
 
 
